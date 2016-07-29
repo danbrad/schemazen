@@ -44,17 +44,23 @@ namespace SchemaZen.Library.Models {
 			if (db != null && db.FindProp("QUOTED_IDENTIFIER") != null) {
 				defaultQuotedId = db.FindProp("QUOTED_IDENTIFIER").Value == "ON";
 			}
-			//if (defaultQuotedId != QuotedId) {
-				script += string.Format(@"SET QUOTED_IDENTIFIER {0} {1}GO{1}",
-					((databaseDefaults ? defaultQuotedId : QuotedId) ? "ON" : "OFF"), Environment.NewLine);
+            //if (defaultQuotedId != QuotedId) {
+            if (!databaseDefaults) // Only script the ones at the beginning
+            {
+                script += string.Format(@"SET QUOTED_IDENTIFIER {0} {1}GO{1}",
+                    ((databaseDefaults ? defaultQuotedId : QuotedId) ? "ON" : "OFF"), Environment.NewLine);
+            }
 			//}
 			var defaultAnsiNulls = !AnsiNull;
 			if (db != null && db.FindProp("ANSI_NULLS") != null) {
 				defaultAnsiNulls = db.FindProp("ANSI_NULLS").Value == "ON";
 			}
-			//if (defaultAnsiNulls != AnsiNull) {
-				script += string.Format(@"SET ANSI_NULLS {0} {1}GO{1}",
-					((databaseDefaults ? defaultAnsiNulls : AnsiNull) ? "ON" : "OFF"), Environment.NewLine);
+            //if (defaultAnsiNulls != AnsiNull) {
+            if (!databaseDefaults) // Only script the ones at the beginning
+            {
+                script += string.Format(@"SET ANSI_NULLS {0} {1}GO{1}",
+                    ((databaseDefaults ? defaultAnsiNulls : AnsiNull) ? "ON" : "OFF"), Environment.NewLine);
+            }
 			//}
 			return script;
 		}
