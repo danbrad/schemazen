@@ -5,7 +5,7 @@ using SchemaZen.Library.Models;
 
 namespace SchemaZen.Library {
 	public class DBHelper {
-		public static bool EchoSql = false;
+		public static bool EchoSql { get; set; } = false;
 
 		public static void ExecSql(string conn, string sql) {
 			if (EchoSql) Console.WriteLine(sql);
@@ -43,9 +43,9 @@ namespace SchemaZen.Library {
 			var cnBuilder = new SqlConnectionStringBuilder(conn);
 			var initialCatalog = cnBuilder.InitialCatalog;
 
-		    var dbName = "[" + initialCatalog + "]";
+			var dbName = "[" + initialCatalog + "]";
 
-		    if (DbExists(cnBuilder.ToString())) {
+			if (DbExists(cnBuilder.ToString())) {
 				cnBuilder.InitialCatalog = "master";
 				ExecSql(cnBuilder.ToString(), "ALTER DATABASE " + dbName + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
 				ExecSql(cnBuilder.ToString(), "drop database " + dbName);
@@ -59,17 +59,17 @@ namespace SchemaZen.Library {
 			var cnBuilder = new SqlConnectionStringBuilder(connection);
 			var dbName = cnBuilder.InitialCatalog;
 			cnBuilder.InitialCatalog = "master";
-		    var files = string.Empty;
-		    if (databaseFilesPath != null) {
-		        Directory.CreateDirectory(databaseFilesPath);
-		        files = string.Format(@"ON 
-(NAME = {0},
-    FILENAME = '{1}\{2}.mdf')
+			var files = string.Empty;
+			if (databaseFilesPath != null) {
+				Directory.CreateDirectory(databaseFilesPath);
+				files = $@"ON 
+(NAME = '{dbName}',
+    FILENAME = '{databaseFilesPath}\{dbName + Guid.NewGuid()}.mdf')
 LOG ON
-(NAME = {0}_log,
-    FILENAME =  '{1}\{2}.ldf')", dbName, databaseFilesPath, dbName + Guid.NewGuid() );
-		    }
-		    ExecSql(cnBuilder.ToString(), "CREATE DATABASE [" + dbName + "]" + files);
+(NAME = '{dbName}_log',
+    FILENAME =  '{databaseFilesPath}\{dbName + Guid.NewGuid()}.ldf')";
+			}
+			ExecSql(cnBuilder.ToString(), "CREATE DATABASE [" + dbName + "] " + files);
 		}
 
 		public static bool DbExists(string conn) {

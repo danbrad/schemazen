@@ -29,40 +29,38 @@ namespace SchemaZen.console {
 				"Create a sql diff file in the specified path.",
 				o => _outDiff = o);
 			HasOption(
-				"o|overwrite=",
+				"o|overwrite",
 				"Overwrite existing target without prompt.",
 				o => _overwrite = o != null);
 			HasOption(
-				"v|verbose=",
+				"v|verbose",
 				"Enable verbose mode (show detailed changes).",
 				o => _verbose = o != null);
 		}
 
 		public override int Run(string[] remainingArguments) {
-		    if (!string.IsNullOrEmpty(_outDiff))
-            {
-                Console.WriteLine();
-                if (!_overwrite && File.Exists(_outDiff)) {
-                    var question = string.Format("{0} already exists - do you want to replace it", _outDiff);
-                    if (!ConsoleQuestion.AskYN(question))
-                    {
-                        return 1;
-                    }
-                }
-            }
+			if (!string.IsNullOrEmpty(_outDiff)) {
+				Console.WriteLine();
+				if (!_overwrite && File.Exists(_outDiff)) {
+					var question = $"{_outDiff} already exists - do you want to replace it";
+					if (!ConsoleQuestion.AskYN(question)) {
+						return 1;
+					}
+				}
+			}
 
-		    var compareCommand = new CompareCommand {
-		        Source = _source,
-		        Target = _target,
-		        Verbose = _verbose,
-		        OutDiff = _outDiff
-		    };
+			var compareCommand = new CompareCommand {
+				Source = _source,
+				Target = _target,
+				Verbose = _verbose,
+				OutDiff = _outDiff
+			};
 
-		    try {
-		        return compareCommand.Execute() ? 1 : 0;
-		    } catch (Exception ex) {
-		        throw new ConsoleHelpAsException(ex.Message);
-		    }
+			try {
+				return compareCommand.Execute() ? 1 : 0;
+			} catch (Exception ex) {
+				throw new ConsoleHelpAsException(ex.Message);
+			}
 		}
 	}
 }
