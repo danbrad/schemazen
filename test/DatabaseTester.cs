@@ -491,6 +491,7 @@ AS INSERT INTO [dbo].[t2](a) SELECT a FROM INSERTED";
 
 			StringAssert.DoesNotContain("INSERTEDENABLE", script);
 
+			StringAssert.Contains("INSERTED\r\nGO\r\nENABLE", script);
 		}
 
 		[Test]
