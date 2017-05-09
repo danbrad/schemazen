@@ -65,7 +65,7 @@ namespace SchemaZen.Library.Models {
 
 			if (RoutineType == RoutineKind.Trigger)
 				after +=
-						$"{Environment.NewLine}{(Disabled ? "DISABLE" : "ENABLE")} TRIGGER [{Owner}].[{Name}] ON [{RelatedTableSchema}].[{RelatedTableName}]{Environment.NewLine}GO{Environment.NewLine}";
+						$"{Environment.NewLine}GO{Environment.NewLine}{(Disabled ? "DISABLE" : "ENABLE")} TRIGGER [{Owner}].[{Name}] ON [{RelatedTableSchema}].[{RelatedTableName}]{Environment.NewLine}GO{Environment.NewLine}";
 
 			if (string.IsNullOrEmpty(definition))
 				definition = $"/* missing definition for {RoutineType} [{Owner}].[{Name}] */";
