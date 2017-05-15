@@ -1298,9 +1298,9 @@ where name = @dbname
 			// This maintains backward compatability for those who use
 			// SchemaZen to keep their schemas under version control.
 			var fileName = name;
-			if (!string.IsNullOrEmpty(schema) && schema.ToLower() != "dbo") {
+			//if (!string.IsNullOrEmpty(schema) && schema.ToLower() != "dbo") {
 				fileName = $"{schema}.{name}";
-			}
+			//}
 			return Path.GetInvalidFileNameChars().Aggregate(fileName, (current, invalidChar) => current.Replace(invalidChar, '-'));
 		}
 
