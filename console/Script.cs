@@ -50,6 +50,10 @@ namespace SchemaZen.console {
 					return 1;
 			}
 
+            int commandTimeout;
+            if (!int.TryParse(Timeout, out commandTimeout))
+                commandTimeout = 30; // Default for SQLCommand
+
 			var scriptCommand = new ScriptCommand {
 				ConnectionString = ConnectionString,
 				DbName = DbName,
@@ -58,14 +62,16 @@ namespace SchemaZen.console {
 				Server = Server,
 				User = User,
 				Logger = _logger,
-				Overwrite = Overwrite
+                Overwrite = Overwrite,
+                Timeout = commandTimeout
 			};
 
 			var filteredTypes = HandleFilteredTypes();
 			var namesAndSchemas = HandleDataTables(DataTables);
 
+
 			try {
-				scriptCommand.Execute(namesAndSchemas, DataTablesPattern, DataTablesExcludePattern, TableHint, filteredTypes);
+				scriptCommand.Execute(namesAndSchemas, DataTablesPattern, DataTablesExcludePattern, TableHint, filteredTypes, commandTimeout);
 			} catch (Exception ex) {
 				throw new ConsoleHelpAsException(ex.Message);
 			}

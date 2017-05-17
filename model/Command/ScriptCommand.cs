@@ -8,7 +8,7 @@ namespace SchemaZen.Library.Command {
 	public class ScriptCommand : BaseCommand {
 
 		public void Execute(Dictionary<string, string> namesAndSchemas, string dataTablesPattern, string dataTablesExcludePattern,
-			string tableHint, List<string> filteredTypes) {
+            string tableHint, List<string> filteredTypes, int commandTimeout) {
 			if (!Overwrite && Directory.Exists(ScriptDir)) {
 				var message = $"{ScriptDir} already exists - you must set overwrite to true";
 				throw new InvalidOperationException(message);
@@ -17,7 +17,7 @@ namespace SchemaZen.Library.Command {
 			var db = CreateDatabase(filteredTypes);
 
 			Logger.Log(TraceLevel.Verbose, "Loading database schema...");
-			db.Load();
+            db.Load(commandTimeout);
 			Logger.Log(TraceLevel.Verbose, "Database schema loaded.");
 
 			foreach (var nameAndSchema in namesAndSchemas) {

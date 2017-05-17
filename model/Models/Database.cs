@@ -160,6 +160,10 @@ namespace SchemaZen.Library.Models {
 		#region Load
 
 		public void Load() {
+            Load(30);
+        }
+
+        public void Load(int commandTimeout) {
 			Tables.Clear();
 			TableTypes.Clear();
 			Routines.Clear();
@@ -174,6 +178,8 @@ namespace SchemaZen.Library.Models {
 			using (var cn = new SqlConnection(Connection)) {
 				cn.Open();
 				using (var cm = cn.CreateCommand()) {
+                    cm.CommandTimeout = commandTimeout;
+
 					LoadProps(cm);
 					LoadSchemas(cm);
 					LoadTables(cm);
